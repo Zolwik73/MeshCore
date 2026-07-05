@@ -275,9 +275,15 @@ public:
       display.setCursor(0, 42);
       sprintf(tmp, "TX: %ddBm", _node_prefs->tx_power_dbm);
       display.print(tmp);
+#if ENV_INCLUDE_FEM == 1
+      display.setCursor(0, 53);
+      sprintf(tmp, "NFloor: %4d  LNA: %d", radio_driver.getNoiseFloor(), board.loRaFEMControl.getLNAEnabled());
+      display.print(tmp);
+#else
       display.setCursor(0, 53);
       sprintf(tmp, "Noise floor: %d", radio_driver.getNoiseFloor());
       display.print(tmp);
+#endif
     } else if (_page == HomePage::BLUETOOTH) {
       display.setColor(DisplayDriver::GREEN);
       display.drawXbm((display.width() - 32) / 2, 18,
@@ -423,6 +429,10 @@ public:
       if (_page == HomePage::RECENT) {
         _task->showAlert("Recent adverts", 800);
       }
+      return true;
+    }
+    if (c == KEY_ENTER && _page == HomePage::RADIO) {
+      _task->toggleLNA();
       return true;
     }
     if (c == KEY_ENTER && _page == HomePage::BLUETOOTH) {
@@ -933,5 +943,21 @@ void UITask::toggleBuzzer() {
     the_mesh.savePrefs();
     showAlert(buzzer.isQuiet() ? "Buzzer: OFF" : "Buzzer: ON", 800);
     _next_refresh = 0;  // trigger refresh
+  #endif
+}
+
+void UITask::toggleLNA() {
+  // Toggle lna
+  #if ENV_INCLUDE_FEM == 1
+    if (!board.loRaFEMControl.isLnaCanControl())
+      return;
+
+    _node_prefs->lna_enabled = !_node_prefs->lna_enabled;
+
+    notify(UIEventType::ack);
+    showAlert(_node_prefs->lna_enabled ? "LNA: 1 after RST" : "LNA: 0 after RST ", 1500);
+
+    the_mesh.savePrefs();
+    _next_refresh = 0;
   #endif
 }

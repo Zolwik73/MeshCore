@@ -89,6 +89,7 @@ public:
   void toggleBuzzer();
   bool getGPSState();
   void toggleGPS();
+  void toggleLNA();
 
 
   // from AbstractUITask

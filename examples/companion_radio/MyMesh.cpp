@@ -885,6 +885,9 @@ MyMesh::MyMesh(mesh::Radio &radio, mesh::RNG &rng, mesh::RTCClock &rtc, SimpleMe
 #else
   _prefs.rx_boosted_gain = 1; // enabled by default
 #endif
+#if ENV_INCLUDE_FEM == 1
+  _prefs.lna_enabled = 0;
+#endif
 #endif
 }
 
@@ -935,6 +938,12 @@ void MyMesh::begin(bool has_display) {
   _prefs.tx_power_dbm = constrain(_prefs.tx_power_dbm, -9, MAX_LORA_TX_POWER);
   _prefs.gps_enabled = constrain(_prefs.gps_enabled, 0, 1);  // Ensure boolean 0 or 1
   _prefs.gps_interval = constrain(_prefs.gps_interval, 0, 86400);  // Max 24 hours
+
+#if ENV_INCLUDE_FEM == 1
+  _prefs.lna_enabled = constrain(_prefs.lna_enabled, 0, 1);
+  board.loRaFEMControl.setLNAEnable(_prefs.lna_enabled);
+  board.loRaFEMControl.setRxModeEnable(); // to correct default LNA settings...
+#endif
 
 #ifdef BLE_PIN_CODE // 123456 by default
   if (_prefs.ble_pin == 0) {
