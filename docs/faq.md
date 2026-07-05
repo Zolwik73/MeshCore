@@ -820,3 +820,5 @@ For companion radios, you can set these radios' transmit power in the smartphone
 | **Ikoka Stick E22-900M33S**                                                        | 2W Model                            | 9 dBm                | 2W                     | **DO NOT EXCEED** (Risk of burn out) [data sheet](https://www.cdebyte.com/pdf-down.aspx?id=4216) Refer to your local government's requirements |
 | **Heltec V4**                                                                      | Standard Output                     | 10 dBm               | 22 dBm (~0.15W)        |                                                                                                                                                |
 |                                                                                    | High Output                         | 22 dBm               | 28 dBm (~0.5W to 0.6W) |                                                                                                                                                |
+
+For Heltec V4 receive testing in strong-RF locations, see [Heltec V4 LNA control test option](./heltec_v4_lna_control.md).
